@@ -1,0 +1,58 @@
+#WSL
+
+#----------------------------------------------------------
+# set your windows home dir to WINHOME
+WINHOME=/mnt/$(powershell.exe -noprofile -noninteractive -command '& {(gci env:USERPROFILE).Value}')
+WINHOME=$(echo $WINHOME | sed 's/\\/\//g' | sed 's/\r$//' | sed 's/\://g' )
+WINHOME=$(echo ${WINHOME/C/c})
+export WINHOME=$WINHOME
+
+#----------------------------------------------------------
+# setup ssh
+cat /dev/zero | ssh-keygen -q -N ""
+
+#----------------------------------------------------------
+# Install git and setup your Name
+sudo apt-get install git -y
+git config --global user.email "yourEmail@aol.com"
+git config --global user.name "Your Name"
+git config --global push.default simple
+
+#----------------------------------------------------------
+# install node via nvm
+curl -o- https://raw.githubusercontent.com/creationix/nvm/v0.33.11/install.sh | bash
+source ~/.bashrc
+nvm install --lts
+
+#----------------------------------------------------------
+#Python 
+sudo apt install python3
+echo "alias python='python3'" >> ~/.bashrc
+source ~/.bashrc
+
+#----------------------------------------------------------
+# azure cli
+
+AZ_REPO=$(lsb_release -cs)
+echo "deb [arch=amd64] https://packages.microsoft.com/repos/azure-cli/ $AZ_REPO main" | \
+    sudo tee /etc/apt/sources.list.d/azure-cli.list
+
+curl -L https://packages.microsoft.com/keys/microsoft.asc | sudo apt-key add -
+
+sudo apt-get update
+sudo apt-get install apt-transport-https azure-cli
+
+#----------------------------------------------------------
+# edit your .bashrc 
+vi ~/.bashrc
+# add the following to always have a WINHOME variable (to the bottom)
+WINHOME=/mnt/$(powershell.exe -noprofile -noninteractive -command '& {(gci env:USERPROFILE).Value}')
+WINHOME=$(echo $WINHOME | sed 's/\\/\//g' | sed 's/\r$//' | sed 's/\://g' )
+WINHOME=$(echo ${WINHOME/C/c})
+export WINHOME=$WINHOME
+# end code to add to .bashrc
+
+#----------------------------------------------------------
+# create soft links to your WINHOME Docs and Downloads:
+ln -s $WINHOME/Documents
+ln -s $WINHOME/Downloads

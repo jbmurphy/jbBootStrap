@@ -1,0 +1,44 @@
+#From an Windows Admin powershell Prompt
+
+# Install PS modules
+install-Module Azure -Force
+Install-Module AzureAD -Force
+Install-Module AzureRM -Force
+
+#region Install Visual Studio Code Insiders
+$uri="https://aka.ms/win32-x64-user-insider"
+$path = $env:temp
+[Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
+$filename = "VSCodeSetup-user-insiders.exe"
+$OutFile = Join-Path -Path $path -ChildPath $filename
+Invoke-WebRequest -uri $uri -OutFile $OutFile -UseBasicParsing
+Start-Process $OutFile /silent
+#endregion
+
+#region install Azure CLI
+mkdir -Path c:\IT\Temp
+Invoke-WebRequest -UseBasicParsing https://aka.ms/installazurecliwindows -OutFile c:\IT\Temp\azure-cli.msi
+Start-Process c:\IT\Temp\azure-cli.msi
+#endregion
+
+#region Setup your profile
+# Add the code below to your PowerShellProfile
+# From a PowerShell prompt type:
+notepad $PROFILE
+# And add this code:
+
+if(Get-Module -ListAvailable Azure ){
+Write-Host "Adding Azure Module" -ForegroundColor Green
+Import-Module Azure
+}
+if(Get-Module -ListAvailable AzureAD ){
+Write-Host "Adding AzureAD Module" -ForegroundColor Green
+Import-Module AzureAD
+}
+
+if(Get-Module -ListAvailable AzureRM ){
+Write-Host "Adding AzureRM Module" -ForegroundColor Green
+Import-Module AzureRM
+}
+
+#endregion
