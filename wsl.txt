@@ -56,3 +56,10 @@ export WINHOME=$WINHOME
 # create soft links to your WINHOME Docs and Downloads:
 ln -s $WINHOME/Documents
 ln -s $WINHOME/Downloads
+
+#----------------------------------------------------------
+# kubernetes
+sudo az aks install-cli
+
+# Helm from https://blog.miniasp.com/post/2018/06/15/My-Windows-Subsystem-for-Linux-WSL-Setup-2018.aspx
+curl https://raw.githubusercontent.com/kubernetes/helm/master/scripts/get | bash
