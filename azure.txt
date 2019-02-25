@@ -1,0 +1,22 @@
+# Edit for your environment
+
+$AzureConnection=Connect-AzureRmAccount
+$SubscriptionId=$AzureConnection.Context.Subscription.Id
+$TenantId=$AzureConn.Context.Subscription.TenantId
+$ResourceGroup="eastUS-01"
+$location='East US'
+$keyVaultName="jemurphyKeyVault"
+$selfSignedKey="jemurphyCert"
+
+# Lets create a KeyVault for Secret Management 
+New-AzureRmKeyVault -Name $keyVaultName -ResourceGroupName $ResourceGroup -Location $location
+
+# New Cert for our Service Principle and Export it
+$cert = New-SelfSignedCertificate -CertStoreLocation "cert:\CurrentUser\My" -Subject "CN=$selfSignedKey" -KeySpec KeyExchange
+Get-ChildItem -Path cert:\CurrentUser\My | where {$_.Thumbprint -eq $cert.Thumbprint} | Export-PfxCertificate -FilePath C:\IT\Temp\"$selfSignedKeyCert".pfx
+
+$key = Add-AzureKeyVaultKey -VaultName 'ContosoKeyVault' -Name 'ContosoImportedPFX' -KeyFilePath 'c:\softkey.pfx' -KeyFilePassword $securepfxpwd
+
+$sp = New-AzureRMADServicePrincipal -DisplayName jemurphyCert -CertValue $keyValue -EndDate $cert.NotAfter -StartDate $cert.NotBefore
+Sleep 20
+New-AzureRmRoleAssignment -RoleDefinitionName Contributor -ServicePrincipalName $sp.ApplicationId
