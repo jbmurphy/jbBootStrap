@@ -1,9 +1,8 @@
 #From an Windows Admin powershell Prompt
 
 # Install PS modules
-install-Module Azure -Force
-Install-Module AzureAD -Force
-Install-Module AzureRM -Force
+Install-Module AZ -Scope CurrentUser
+Install-Module AzureAD -Scope CurrentUser -Force
 
 #region Install Visual Studio Code Insiders
 $uri="https://aka.ms/win32-x64-user-insider"
@@ -27,10 +26,11 @@ Start-Process c:\IT\Temp\azure-cli.msi
 notepad $PROFILE
 # And add this code:
 
-if(Get-Module -ListAvailable Azure ){
-Write-Host "Adding Azure Module" -ForegroundColor Green
-Import-Module Azure
-}
+# seems that Az doesn't need to be loaded manually, ignore for now
+#if(Get-Module -ListAvailable AZ ){
+#Write-Host "Adding Azure Module" -ForegroundColor Green
+#Import-Module Azure
+#}
 if(Get-Module -ListAvailable AzureAD ){
 Write-Host "Adding AzureAD Module" -ForegroundColor Green
 Import-Module AzureAD
